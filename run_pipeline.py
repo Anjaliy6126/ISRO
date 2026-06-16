@@ -11,7 +11,7 @@ from src.dl_models import train_and_evaluate_dl
 from src.hotspot_detection import analyze_fire_hcho_lag_correlation
 
 def main():
-    base_dir = "c:/Users/Anjali/OneDrive/Desktop/ISRO"
+    base_dir = os.path.abspath(os.path.dirname(__file__))
     
     print("=========================================================")
     print("   AIR QUALITY ESTIMATION & HCHO HOTSPOT DETECTION       ")

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import math
@@ -58,11 +59,13 @@ def get_aqi_color_theme(aqi):
     else:
         return {"category": "Severe", "color": "#7e0023", "text_color": "#ffffff"}
 
-def get_station_locations(base_dir="c:/Users/Anjali/OneDrive/Desktop/ISRO"):
+def get_station_locations(base_dir=None):
     """
     Returns unique station IDs, names, and coordinates from simulated ground data.
     """
-    raw_path = f"{base_dir}/data/raw/cpcb_stations.csv"
+    if base_dir is None:
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    raw_path = os.path.join(base_dir, "data", "raw", "cpcb_stations.csv")
     if not os.path.exists(raw_path):
         return []
     df = pd.read_csv(raw_path)

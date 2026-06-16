@@ -113,8 +113,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Define directories
-BASE_DIR = "c:/Users/Anjali/OneDrive/Desktop/ISRO"
+# Define directories relative to the repository root
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 RAW_DIR = os.path.join(BASE_DIR, "data", "raw")
 PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
