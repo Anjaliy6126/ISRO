@@ -5,6 +5,7 @@ __pycache__/
 
 # Streamlit/Add-on files
 .streamlit/
+!.streamlit/config.toml
 
 # Operating system files
 .DS_Store
