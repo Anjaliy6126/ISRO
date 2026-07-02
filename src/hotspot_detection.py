@@ -89,11 +89,13 @@ def detect_dbscan_clusters(grid, lats, lons, threshold_std=1.5, eps_km=150.0, mi
     
     return label_grid
 
-def analyze_fire_hcho_lag_correlation(base_dir="c:/Users/Anjali/OneDrive/Desktop/ISRO"):
+def analyze_fire_hcho_lag_correlation(base_dir=None):
     """
     Performs lag correlation analysis between daily fire counts (MODIS/VIIRS) 
     and spatial mean HCHO column densities in India (or specifically Northern India).
     """
+    if base_dir is None:
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     print("Performing Fire-HCHO Correlation and Lag-Correlation Analysis...")
     raw_dir = os.path.join(base_dir, "data", "raw")
     processed_dir = os.path.join(base_dir, "data", "processed")
@@ -195,4 +197,20 @@ def process_daily_hotspots(date_str, raw_dir, processed_dir):
     return out_ds
 
 if __name__ == "__main__":
+
     analyze_fire_hcho_lag_correlation()
+
+    from datetime import datetime
+    raw_dir = "data/raw"
+    processed_dir = "data/processed"
+
+    ds = process_daily_hotspots(
+        "2025-11-15",
+        raw_dir,
+        processed_dir
+    )
+
+    if ds is not None:
+        out_file = "data/processed/hcho_hotspots_2025_11_15.nc"
+        ds.to_netcdf(out_file)
+        print(f"Hotspot file saved: {out_file}")

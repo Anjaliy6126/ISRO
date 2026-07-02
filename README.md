@@ -67,3 +67,36 @@ Advanced source attribution system
 District-wise pollution contribution analysis
 AI-generated environmental reports
 Pollution forecasting and early warning system
+
+## Official Data Ingestion Pipeline
+The project now includes official-source ingestion and preprocessing scripts to build a production-ready data engineering pipeline.
+
+Key scripts:
+- `run_pipeline.py` — orchestrates simulation or real-mode pipeline execution
+- `src/real_data_ingestion/download_all.py` — downloads CPCB, FIRMS, ERA5, Sentinel-5P, MOSDAC sources and preprocesses raw files
+- `src/download_cpcb.py` — downloads CPCB station monitoring data
+- `src/download_firms.py` — downloads NASA FIRMS active fire alerts
+- `src/download_meteorology.py` — downloads ERA5 meteorology via CDS
+- `src/download_sentinel5p.py` — ingests Sentinel-5P via Google Earth Engine
+- `src/real_data_ingestion/download_mosdac.py` — converts MOSDAC INSAT-3D HDF5 to NetCDF
+- `src/preprocess_data.py` — standardizes CPCB and fire alert CSVs
+- `src/merge_datasets.py` — merges daily raw grids into a single NetCDF file
+
+Output files:
+- `data/raw/cpcb_stations.csv`
+- `data/raw/fire_alerts.csv`
+- `data/raw/insat3d/*.nc`
+- `data/raw/s5p/*.nc`
+- `data/raw/era5/*.nc`
+- `data/processed/matched_station_data.csv`
+- `data/processed/fire_hcho_lag_correlation.csv`
+- `data/processed/merged_daily_grids.nc`
+
+Example command for real data ingestion:
+```bash
+python run_pipeline.py --mode real --download --start-date 2025-10-01 --end-date 2025-10-05 \
+  --firms-api-key YOUR_FIRMS_KEY \
+  --cpcb-url "https://example.com/cpcb_stations.csv" \
+  --mosdac-h5 "path/to/mosdac_files" \
+  --skip-existing
+```

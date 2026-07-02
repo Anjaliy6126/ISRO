@@ -1,21 +1,19 @@
 import os
 import argparse
 from datetime import datetime, timedelta
-import ee
+
 import geemap
 
-def download_s5p(date_str, output_dir):
+from src.gee_utils import initialize_earth_engine
+
+
+def download_s5p(date_str, output_dir, project=None, service_account_file=None):
     """
     Connects to Google Earth Engine, averages Sentinel-5P parameters,
     clips them to India, and exports a unified GeoTIFF/NetCDF grid.
     """
-    # Initialize GEE
-    try:
-        ee.Initialize()
-    except Exception as e:
-        print("GEE not initialized. Attempting authentication...")
-        ee.Authenticate()
-        ee.Initialize()
+    initialize_earth_engine(project=project, service_account_file=service_account_file)
+    import ee
         
     dt = datetime.strptime(date_str, "%Y-%m-%d")
     date_formatted = dt.strftime("%Y_%m_%d")
@@ -67,6 +65,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Extract Sentinel-5P gridded variables from Google Earth Engine.")
     parser.add_argument("--date", type=str, required=True, help="Date in YYYY-MM-DD format.")
     parser.add_argument("--out_dir", type=str, default="c:/Users/Anjali/OneDrive/Desktop/ISRO/data/raw/s5p", help="Target output directory.")
+    parser.add_argument('--gee-project', type=str, default=None, help='Google Cloud project ID for Earth Engine initialization.')
+    parser.add_argument('--service-account-file', type=str, default=None, help='Path to Google Cloud service account JSON file for Earth Engine authentication.')
+    parser.add_argument('--force-service-account', action='store_true', help='Require service account auth and fail if the file is missing.')
     args = parser.parse_args()
-    
-    download_s5p(args.date, args.out_dir)
+
+    download_s5p(
+        args.date,
+        args.out_dir,
+        project=args.gee_project,
+        service_account_file=args.service_account_file,
+        force_service_account=args.force_service_account
+    )
